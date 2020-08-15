@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomSheetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bottom_sheet"
+    android:backgroundTint="#1A1A1A"
+    android:orientation="vertical">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        app:riv_corner_radius="75dp"
+        android:padding="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/profile_image" />
+
+    <TextView
+        android:id="@+id/sheetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/open_sans_semi_bold"
+        android:padding="5dp"
+        android:text="@string/full_name"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/sheetEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:text="@string/email"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"/>
+
+    <Button
+        android:id="@+id/sheetButton"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTintMode="screen"
+        android:padding="5dp"
+        android:text="@string/explore"
+        android:textAllCaps="false"
+        android:textSize="18sp"/>
+
+</LinearLayout>

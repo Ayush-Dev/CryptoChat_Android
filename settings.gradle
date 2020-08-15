@@ -1,0 +1,2 @@
+rootProject.name='Crypto Chat v2'
+include ':app'

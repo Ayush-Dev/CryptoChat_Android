@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "800388417562",
+    "firebase_url": "https://cryptochat-android.firebaseio.com",
+    "project_id": "cryptochat-android",
+    "storage_bucket": "cryptochat-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800388417562:android:1c62f4d0b8793e052f29a3",
+        "android_client_info": {
+          "package_name": "com.ayush.cryptochatv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "800388417562-pt3b4s594uoaijl29lqon61pgpiaek9a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ayush.cryptochatv2",
+            "certificate_hash": "f2c7094a18386c2f6f240f05c2d83aa993ef5dbd"
+          }
+        },
+        {
+          "client_id": "800388417562-04no48dobu91n8n2dasj06skv68mhufa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR3rBRjXa_xHKh2aOz1NgdC5bE6TCDjnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800388417562-04no48dobu91n8n2dasj06skv68mhufa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

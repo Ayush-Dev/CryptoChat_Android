@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/home"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    tools:context=".HomePage">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/homeNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#1A1A1A"
+        android:elevation="8dp"
+        app:itemIconTint="@android:color/tab_indicator_text"
+        app:itemTextColor="@android:color/tab_indicator_text"
+        app:menu="@menu/bottom_navigation_menu" />
+
+
+</RelativeLayout>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    tools:context=".MessagePage">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/messageAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbMessageToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:padding="3dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/ibMessageBack"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="#00000000"
+                    android:contentDescription="@string/logo"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_back_white_24dp"/>
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/ivMessageProfileImage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_toEndOf="@+id/ibMessageBack"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="@string/logo"
+                    android:padding="1dp"
+                    android:transitionName="profilePicture"
+                    app:riv_corner_radius="20dp"
+                    android:src="@drawable/profile_image"/>
+
+                <TextView
+                    android:id="@+id/tvMessageName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/ivMessageProfileImage"
+                    android:layout_toStartOf="@+id/ibInfo"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:gravity="start"
+                    android:padding="3dp"
+                    android:text="@string/full_name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"/>
+
+                <ImageButton
+                    android:id="@+id/ibInfo"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="#00000000"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/logo"
+                    android:src="@drawable/ic_info_outline_white_24dp" />
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/messageAppBar"
+        android:layout_above="@+id/messageRelativeLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/messages_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/messageRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:elevation="8dp"
+        android:padding="5dp">
+
+        <EditText
+            android:id="@+id/etMessageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_toStartOf="@id/ibMessageSend"
+            android:background="@drawable/rounded_edittext"
+            android:backgroundTint="#1A1A1A"
+            android:gravity="top|start"
+            android:hint="@string/type_a_message"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            android:padding="10dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#707070"/>
+
+        <ImageButton
+            android:id="@+id/ibMessageSend"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTintMode="screen"
+            android:contentDescription="@string/logo"
+            android:foregroundGravity="center"
+            android:src="@drawable/ic_send_white_24dp" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

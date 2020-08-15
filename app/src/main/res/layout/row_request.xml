@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="#1A1A1A">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:riv_corner_radius="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/profile_image"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/reqFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:padding="3dp"
+                android:fontFamily="@font/open_sans_semi_bold"
+                android:text="@string/full_name"
+                android:textAlignment="textStart"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:id="@+id/reqEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="7dp"
+                android:padding="3dp"
+                android:text="@string/email"
+                android:textAlignment="textStart"
+                android:textColor="#CCCCCC"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp">
+
+                <Button
+                    android:id="@+id/acceptRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="3dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:backgroundTintMode="screen"
+                    android:text="@string/confirm"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"/>
+
+                <Button
+                    android:id="@+id/rejectRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="3dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="#222222"
+                    android:backgroundTintMode="screen"
+                    android:text="@string/reject"
+                    android:textAllCaps="false"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

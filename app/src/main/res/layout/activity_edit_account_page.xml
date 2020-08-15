@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    tools:context=".EditAccountPage">
+
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="5dp">
+
+        <ImageButton
+            android:id="@+id/editClose"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:contentDescription="@string/logo"
+            android:background="#00000000"
+            android:src="@drawable/ic_close_white_24dp"/>
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/editClose"
+            android:layout_toStartOf="@+id/editSave"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/open_sans_bold"
+            android:padding="3dp"
+            android:text="@string/edit_account"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:transitionName="header"/>
+
+        <ImageButton
+            android:id="@+id/editSave"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/logo"
+            android:background="#00000000"
+            android:src="@drawable/ic_check_white_24dp"/>
+
+    </RelativeLayout>
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/editProfileImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/headerLayout"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        app:riv_corner_radius="75dp"
+        android:src="@drawable/profile_image"/>
+
+    <TextView
+        android:id="@+id/editProfileEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editProfileImage"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/email"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/editFullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editProfileEmail"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:autofillHints="no"
+        android:background="@drawable/rounded_edittext"
+        android:backgroundTint="#1A1A1A"
+        android:hint="@string/full_name"
+        android:inputType="text"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
+        android:padding="8dp"/>
+
+
+</RelativeLayout>

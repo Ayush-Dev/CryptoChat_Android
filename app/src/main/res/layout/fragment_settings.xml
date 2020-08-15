@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#121212"
+    tools:context=".SettingsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="@string/settings"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/header">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/settingUserLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/settingUserImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="20dp"
+                    android:layout_gravity="center"
+                    app:riv_corner_radius="50dp"
+                    android:src="@drawable/profile_image"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text="@string/full_name"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text="@string/email"
+                        android:textColor="#DDDDDD"
+                        android:textSize="18sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/settingUserLayout"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/settingsEditAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1A1A1A"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/settingImage1"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/logo"
+                        android:src="@drawable/ic_edit_white_24dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/settingImage1"
+                        android:layout_marginStart="20dp"
+                        android:padding="3dp"
+                        android:text="@string/edit_account"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/settingsChangePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1A1A1A"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/settingImage2"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/logo"
+                        android:src="@drawable/ic_key_white_24dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/settingImage2"
+                        android:layout_marginStart="20dp"
+                        android:padding="3dp"
+                        android:text="@string/change_password"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/settingsHelp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1A1A1A"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/settingImage3"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/logo"
+                        android:src="@drawable/ic_help_white_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/settingImage3"
+                        android:padding="3dp"
+                        android:text="@string/help"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/settingsLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1A1A1A"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/settingImage4"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/logo"
+                        android:src="@drawable/ic_logout_white_24dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/settingImage4"
+                        android:layout_marginStart="20dp"
+                        android:padding="3dp"
+                        android:text="@string/logout"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"/>
+
+</RelativeLayout>
