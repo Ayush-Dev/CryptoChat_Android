@@ -61,6 +61,7 @@
                     android:padding="5dp">
 
                     <TextView
+                        android:id="@+id/settingFullName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="3dp"
@@ -69,6 +70,7 @@
                         android:textSize="20sp"/>
 
                     <TextView
+                        android:id="@+id/settingEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="3dp"

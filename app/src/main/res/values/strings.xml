@@ -30,4 +30,8 @@
     <string name="no_new_requests">No New Requests</string>
     <string name="reject">Reject</string>
     <string name="confirm">Confirm</string>
+    <string name="alert_body">\n Write this somewhere safe. You have to use this code to log back into your account on different device.</string>
+    <string name="i_wrote_it_down">I wrote it down</string>
+    <string name="encryption">Encryption</string>
+    <string name="total_messages">Total Messages</string>
 </resources>

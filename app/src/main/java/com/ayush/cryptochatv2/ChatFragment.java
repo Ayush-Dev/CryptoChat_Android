@@ -34,6 +34,7 @@ public class ChatFragment extends Fragment {
     private List<Users> contactList;
     private RecyclerView recyclerView;
     private ShimmerFrameLayout loading;
+    private String CURRENT_UID;
     private TextView warning;
     private View view;
 
@@ -41,10 +42,10 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chat, container, false);
         initialize();
-//        getContacts();
-        contactList.add(new Users("Ayush", "email", "uid"));
-        adapterUser = new AdapterUser(getActivity(), contactList);
-        recyclerView.setAdapter(adapterUser);
+        getContacts();
+//        contactList.add(new Users("Ayush", "email", "uid", ""));
+//        adapterUser = new AdapterUser(getActivity(), contactList, CURRENT_UID);
+//        recyclerView.setAdapter(adapterUser);
 
         return view;
     }
@@ -61,13 +62,14 @@ public class ChatFragment extends Fragment {
     private void getContacts() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) return;
+        CURRENT_UID = user.getUid();
         DatabaseReference refContacts = database.getReference("CONTACTS").child(user.getUid());
         refContacts.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 contactList.clear();
                 if(snapshot.getChildrenCount() == 1) {
-                    adapterUser = new AdapterUser(getActivity(), contactList);
+                    adapterUser = new AdapterUser(getActivity(), contactList, CURRENT_UID);
                     recyclerView.setAdapter(adapterUser);
                     loading.setVisibility(View.GONE);
                     warning.setVisibility(View.VISIBLE);
@@ -82,7 +84,7 @@ public class ChatFragment extends Fragment {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         Users users = snapshot.getValue(Users.class);
                                         contactList.add(users);
-                                        adapterUser = new AdapterUser(getActivity(), contactList);
+                                        adapterUser = new AdapterUser(getActivity(), contactList, CURRENT_UID);
                                         recyclerView.setAdapter(adapterUser);
                                         loading.setVisibility(View.GONE);
                                         warning.setVisibility(View.INVISIBLE);
@@ -106,6 +108,12 @@ public class ChatFragment extends Fragment {
 
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        loading.stopShimmer();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         loading.stopShimmer();
@@ -117,9 +125,4 @@ public class ChatFragment extends Fragment {
         loading.startShimmer();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        loading.startShimmer();
-    }
 }

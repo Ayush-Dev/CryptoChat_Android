@@ -14,18 +14,32 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ayush.cryptochatv2.pojo.Users;
+import com.ayush.cryptochatv2.security.KeyExchange;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginPage extends AppCompatActivity {
 
+    public static String PRIVATE_KEY, EMAIL, FULL_NAME, UID;
     private Button btSignIn;
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -48,10 +62,10 @@ public class LoginPage extends AppCompatActivity {
                     loginUser();
                     etEmail.setError(null);
                     etPassword.setError(null);
-                    etPassword.getEditText().setText(null);
-                    etEmail.getEditText().setText(null);
+                    Objects.requireNonNull(etPassword.getEditText()).setText(null);
+                    Objects.requireNonNull(etEmail.getEditText()).setText(null);
                 }
-                startActivity(new Intent(LoginPage.this, HomePage.class));
+//                startActivity(new Intent(LoginPage.this, HomePage.class));
             }
         });
 
@@ -75,10 +89,44 @@ public class LoginPage extends AppCompatActivity {
 //        AdapterNetwork network = new AdapterNetwork(this);
     }
 
+    private String getPublicKey() {
+        String FILENAME = ".metadata.bin";
+        String publicKey;
+        FileInputStream fileInputStream = null;
+
+        try {
+            fileInputStream = openFileInput(FILENAME);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder = new StringBuilder();
+
+            while((publicKey = bufferedReader.readLine()) != null)
+                stringBuilder.append(publicKey);
+            PRIVATE_KEY = stringBuilder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fileInputStream != null) {
+                try{
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ArrayList<Integer> privatePackets = KeyExchange.generatePrivatePackets(PRIVATE_KEY);
+        ArrayList<String> publicPackets = KeyExchange.generatePublicPackets(privatePackets);
+        publicKey = KeyExchange.generatePublicKey(publicPackets);
+        System.out.println(publicKey);
+        System.out.println(getFilesDir());
+        return publicKey;
+    }
+
     private void loginUser() {
         loading.setVisibility(View.VISIBLE);
-        String email = etEmail.getEditText().getText().toString();
-        String password = etPassword.getEditText().getText().toString();
+        final String email = Objects.requireNonNull(etEmail.getEditText()).getText().toString();
+        String password = Objects.requireNonNull(etPassword.getEditText()).getText().toString();
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -91,13 +139,38 @@ public class LoginPage extends AppCompatActivity {
                         return;
                     }
                     if(user.isEmailVerified()) {
-                        loading.setVisibility(View.INVISIBLE);
-                        Intent intent = new Intent(LoginPage.this, HomePage.class);
-                        intent.putExtra("EMAIL", user.getEmail());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        Toast.makeText(LoginPage.this, "Login Successful", Toast.LENGTH_LONG).show();
-                        startActivity(intent);
-                        LoginPage.this.finish();
+                        final String publicKey = getPublicKey();
+                        FirebaseDatabase.getInstance().getReference("USERS").child(user.getUid())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Users user = snapshot.getValue(Users.class);
+                                        String serverKey = Objects.requireNonNull(user).getPublicKey();
+                                        EMAIL = email;
+                                        FULL_NAME = user.getName();
+                                        UID = user.getUid();
+                                        if(publicKey.equals(serverKey)) {
+                                            loading.setVisibility(View.INVISIBLE);
+                                            Intent intent = new Intent(LoginPage.this, HomePage.class);
+                                            intent.putExtra("EMAIL", user.getEmail());
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            Toast.makeText(LoginPage.this, "Login Successful", Toast.LENGTH_LONG).show();
+                                            startActivity(intent);
+                                            LoginPage.this.finish();
+                                        }
+                                        else {
+                                            //todo
+                                            //get custom box private key input
+                                            loading.setVisibility(View.INVISIBLE);
+                                            Toast.makeText(LoginPage.this, "Authentication Key Error", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                     }
                     else {
                         loading.setVisibility(View.INVISIBLE);

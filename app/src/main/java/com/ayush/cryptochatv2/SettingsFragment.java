@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -20,6 +21,7 @@ public class SettingsFragment extends Fragment {
     private Animation animationEditAccount, animationChangePassword, animationHelp;
     private FirebaseAuth auth;
     private RelativeLayout layoutEditAccount, layoutChangePassword, layoutHelp, layoutLogout;
+    private TextView fullName, email;
     private View view;
 
     @Override
@@ -27,6 +29,7 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
         initialization();
+        setUI();
 
         layoutEditAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +79,8 @@ public class SettingsFragment extends Fragment {
     }
 
     private void initialization() {
+        fullName = view.findViewById(R.id.settingFullName);
+        email = view.findViewById(R.id.settingEmail);
         layoutEditAccount = view.findViewById(R.id.settingsEditAccount);
         layoutChangePassword = view.findViewById(R.id.settingsChangePassword);
         layoutHelp = view.findViewById(R.id.settingsHelp);
@@ -84,5 +89,10 @@ public class SettingsFragment extends Fragment {
         animationEditAccount = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_animation);
         animationChangePassword = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_animation);
         animationHelp = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_animation);
+    }
+
+    private void setUI() {
+        fullName.setText(LoginPage.FULL_NAME);
+        email.setText(LoginPage.EMAIL);
     }
 }

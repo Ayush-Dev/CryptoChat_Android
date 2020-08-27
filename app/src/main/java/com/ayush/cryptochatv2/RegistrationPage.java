@@ -3,7 +3,9 @@ package com.ayush.cryptochatv2;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Fade;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ayush.cryptochatv2.pojo.Users;
+import com.ayush.cryptochatv2.security.KeyExchange;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,14 +32,19 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegistrationPage extends AppCompatActivity {
 
-    //    private Animation animationSignIn, animationSignUp;
-    private Button btSignUp;
+//        private Animation animationSignIn, animationSignUp;
+    private Button btSignUp, alertOK;
     private DatabaseReference databaseReference;
+    private Dialog dialog;
     private FirebaseAuth auth;
     private ImageButton btSignIn;
     private RelativeLayout loading;
@@ -67,11 +75,18 @@ public class RegistrationPage extends AppCompatActivity {
                     etEmail.setError(null);
                     etFullName.setError(null);
                     registerNewUser();
-                    etConfirmPassword.getEditText().setText(null);
-                    etPassword.getEditText().setText(null);
-                    etEmail.getEditText().setText(null);
-                    etFullName.getEditText().setText(null);
+                    Objects.requireNonNull(etConfirmPassword.getEditText()).setText(null);
+                    Objects.requireNonNull(etPassword.getEditText()).setText(null);
+                    Objects.requireNonNull(etEmail.getEditText()).setText(null);
+                    Objects.requireNonNull(etFullName.getEditText()).setText(null);
                 }
+            }
+        });
+
+        alertOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
             }
         });
     }
@@ -86,9 +101,38 @@ public class RegistrationPage extends AppCompatActivity {
         header = findViewById(R.id.regHeader);
         footer = findViewById(R.id.regFooter);
         loading = findViewById(R.id.loading);
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.alert_box_design);
+        dialog.setCanceledOnTouchOutside(false);
+        alertOK = dialog.findViewById(R.id.alertOK);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
         etFullName.clearFocus();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void savePrivateKey(String privateKey) {
+        TextView textView = dialog.findViewById(R.id.alertTitle);
+        textView.setText("Your private key is\n" + privateKey);
+        dialog.show();
+
+        String FILENAME = ".metadata.bin";
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = openFileOutput(FILENAME, MODE_PRIVATE);
+            fileOutputStream.write(privateKey.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void moveToLoginPage() {
@@ -106,9 +150,9 @@ public class RegistrationPage extends AppCompatActivity {
 
     private void registerNewUser() {
         loading.setVisibility(View.VISIBLE);
-        final String email = etEmail.getEditText().getText().toString();
-        String password = etPassword.getEditText().getText().toString();
-        final String name = etFullName.getEditText().getText().toString();
+        final String email = Objects.requireNonNull(etEmail.getEditText()).getText().toString();
+        String password = Objects.requireNonNull(etPassword.getEditText()).getText().toString();
+        final String name = Objects.requireNonNull(etFullName.getEditText()).getText().toString();
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -123,13 +167,18 @@ public class RegistrationPage extends AppCompatActivity {
                             databaseReference.child("REQUESTS").child(uid).child("empty").setValue("empty");
                             databaseReference.child("CONTACTS").child(uid).child("empty").setValue("empty");
                             databaseReference.child("CHATS").child(uid).child("empty").setValue("empty");
-                            Users newUser = new Users(name, email, uid);
+                            final String PRIVATE_KEY = KeyExchange.generatePrivateKey();
+                            ArrayList<Integer> privateKeyPackets = KeyExchange.generatePrivatePackets(PRIVATE_KEY);
+                            ArrayList<String> publicKeyPackets = KeyExchange.generatePublicPackets(privateKeyPackets);
+                            String publicKey = KeyExchange.generatePublicKey(publicKeyPackets);
+                            Users newUser = new Users(name, email, uid, publicKey);
                             databaseReference.child("USERS").child(uid).setValue(newUser);
                             auth.getCurrentUser().sendEmailVerification()
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+                                                savePrivateKey(PRIVATE_KEY);
                                                 Toast.makeText(RegistrationPage.this,"Registered, " +
                                                         "Check email for verification.", Toast.LENGTH_SHORT).show();
                                             }
@@ -190,15 +239,15 @@ public class RegistrationPage extends AppCompatActivity {
 
     private boolean validateInput() {
         boolean flag = true;
-        if(etConfirmPassword.getEditText().getText().toString().isEmpty()) {
+        if(Objects.requireNonNull(etConfirmPassword.getEditText()).getText().toString().isEmpty()) {
             etConfirmPassword.setError("Empty Fields");
             flag = false;
         }
-        if(etPassword.getEditText().getText().toString().isEmpty()) {
+        if(Objects.requireNonNull(etPassword.getEditText()).getText().toString().isEmpty()) {
             etPassword.setError("Empty Fields");
             flag = false;
         }
-        if(etEmail.getEditText().getText().toString().isEmpty()) {
+        if(Objects.requireNonNull(etEmail.getEditText()).getText().toString().isEmpty()) {
             etEmail.setError("Empty Fields");
             flag = false;
         }
@@ -206,7 +255,7 @@ public class RegistrationPage extends AppCompatActivity {
             etEmail.setError("Invalid Email");
             flag = false;
         }
-        if(etFullName.getEditText().getText().toString().isEmpty()) {
+        if(Objects.requireNonNull(etFullName.getEditText()).getText().toString().isEmpty()) {
             etFullName.setError("Empty Fields");
             flag = false;
         }
@@ -215,6 +264,7 @@ public class RegistrationPage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if(dialog.isShowing()) return;
         moveToLoginPage();
         finish();
     }

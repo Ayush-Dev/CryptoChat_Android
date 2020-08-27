@@ -68,6 +68,7 @@ public class HomePage extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(bottomNavigation.getSelectedItemId() == R.id.navChats) {
+            System.exit(0);
             finish();
             return;
         }

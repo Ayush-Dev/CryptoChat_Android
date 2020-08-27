@@ -23,10 +23,12 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
 
     private Context context;
     private List<Users> usersList;
+    private String CURRENT_UID;
 
-    public AdapterUser(Context context, List<Users> usersList) {
+    public AdapterUser(Context context, List<Users> usersList, String currentUserId) {
         this.context = context;
         this.usersList = usersList;
+        this.CURRENT_UID = currentUserId;
     }
 
     @NonNull
@@ -40,7 +42,7 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
     public void onBindViewHolder(@NonNull final AdapterUser.MyHolder holder, int position) {
         final String profileName = usersList.get(position).getName();
         final String profileId = usersList.get(position).getUid();
-        String profileEmail = usersList.get(position).getEmail();
+        final String profileEmail = usersList.get(position).getEmail();
         holder.tvProfileName.setText(profileName);
         holder.tvProfileEmail.setText(profileEmail);
 
@@ -49,8 +51,9 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
             public void onClick(View v) {
                 holder.itemView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce_animation));
                 AnimationUtils.loadAnimation(context, R.anim.bounce_animation);
-                System.out.println("CLICKED");
                 Intent intent = new Intent(context, MessagePage.class);
+                intent.putExtra("currentUserId", CURRENT_UID);
+                intent.putExtra("userEmail", profileEmail);
                 intent.putExtra("userId", profileId);
                 intent.putExtra("userName", profileName);
                 context.startActivity(intent);
@@ -60,7 +63,12 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
         holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, UserInfo.class));
+                Intent intent = new Intent(context, UserInfo.class);
+                intent.putExtra("currentUserId", CURRENT_UID);
+                intent.putExtra("userEmail", profileEmail);
+                intent.putExtra("userId", profileId);
+                intent.putExtra("userName", profileName);
+                context.startActivity(intent);
             }
         });
     }
