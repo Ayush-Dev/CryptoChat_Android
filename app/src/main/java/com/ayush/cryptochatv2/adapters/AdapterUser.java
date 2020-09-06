@@ -23,12 +23,10 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
 
     private Context context;
     private List<Users> usersList;
-    private String CURRENT_UID;
 
-    public AdapterUser(Context context, List<Users> usersList, String currentUserId) {
+    public AdapterUser(Context context, List<Users> usersList) {
         this.context = context;
         this.usersList = usersList;
-        this.CURRENT_UID = currentUserId;
     }
 
     @NonNull
@@ -43,6 +41,7 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
         final String profileName = usersList.get(position).getName();
         final String profileId = usersList.get(position).getUid();
         final String profileEmail = usersList.get(position).getEmail();
+        final String profileKey = usersList.get(position).getPublicKey();
         holder.tvProfileName.setText(profileName);
         holder.tvProfileEmail.setText(profileEmail);
 
@@ -52,9 +51,9 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
                 holder.itemView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce_animation));
                 AnimationUtils.loadAnimation(context, R.anim.bounce_animation);
                 Intent intent = new Intent(context, MessagePage.class);
-                intent.putExtra("currentUserId", CURRENT_UID);
                 intent.putExtra("userEmail", profileEmail);
                 intent.putExtra("userId", profileId);
+                intent.putExtra("userKey", profileKey);
                 intent.putExtra("userName", profileName);
                 context.startActivity(intent);
             }
@@ -64,7 +63,6 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, UserInfo.class);
-                intent.putExtra("currentUserId", CURRENT_UID);
                 intent.putExtra("userEmail", profileEmail);
                 intent.putExtra("userId", profileId);
                 intent.putExtra("userName", profileName);

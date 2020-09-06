@@ -1,14 +1,20 @@
 package com.ayush.cryptochatv2;
 
 import android.app.ActivityOptions;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.util.Log;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -39,12 +46,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginPage extends AppCompatActivity {
 
-    public static String PRIVATE_KEY, EMAIL, FULL_NAME, UID;
-    private Button btSignIn;
+    protected static String EMAIL, FULL_NAME, UID;
+    protected static ArrayList<Integer> PRIVATE_KEY_PACKETS;
+    private Button btSignIn, alertOK, alertCancel;
+    private Dialog dialog;
+    private EditText alertKey;
     private FirebaseAuth auth;
     private FirebaseUser user;
     private ImageButton btSignUp;
     private RelativeLayout loading;
+    private String publicKey;
     private TextInputLayout etEmail, etPassword;
     private TextView header, footer;
 
@@ -75,6 +86,63 @@ public class LoginPage extends AppCompatActivity {
                 moveToRegistrationPage();
             }
         });
+
+        alertOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String privateKey = alertKey.getText().toString();
+                if(privateKey.isEmpty()) {
+                    dialog.dismiss();
+                    Toast.makeText(LoginPage.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                savePrivateKey(privateKey);
+                publicKey = getPublicKey();
+                FirebaseDatabase.getInstance().getReference("USERS").child(user.getUid())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Users user = snapshot.getValue(Users.class);
+                                String serverKey = Objects.requireNonNull(user).getPublicKey();
+                                EMAIL = user.getEmail();
+                                FULL_NAME = user.getName();
+                                UID = user.getUid();
+                                if(publicKey.equals(serverKey)) {
+                                    Intent intent = new Intent(LoginPage.this, HomePage.class);
+                                    intent.putExtra("EMAIL", user.getEmail());
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    Toast.makeText(LoginPage.this, "Login Successful", Toast.LENGTH_LONG).show();
+                                    startActivity(intent);
+                                    LoginPage.this.finish();
+                                }
+                                else {
+                                    Toast.makeText(LoginPage.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                dialog.dismiss();
+            }
+        });
+
+        alertCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                Toast.makeText(LoginPage.this, "Authentication Error", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                return i == KeyEvent.KEYCODE_BACK;
+            }
+        });
     }
 
     private void initialize() {
@@ -86,6 +154,14 @@ public class LoginPage extends AppCompatActivity {
         etPassword = findViewById(R.id.loginPassword);
         loading = findViewById(R.id.loading);
         auth = FirebaseAuth.getInstance();
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_box_key_input);
+        dialog.setCanceledOnTouchOutside(false);
+        assert dialog.getWindow() != null;
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertOK = dialog.findViewById(R.id.alertOK);
+        alertCancel = dialog.findViewById(R.id.alertCancel);
+        alertKey = dialog.findViewById(R.id.alertKey);
 //        AdapterNetwork network = new AdapterNetwork(this);
     }
 
@@ -102,7 +178,8 @@ public class LoginPage extends AppCompatActivity {
 
             while((publicKey = bufferedReader.readLine()) != null)
                 stringBuilder.append(publicKey);
-            PRIVATE_KEY = stringBuilder.toString();
+            String privateKey = stringBuilder.toString();
+            PRIVATE_KEY_PACKETS = KeyExchange.generatePrivatePackets(privateKey);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -115,12 +192,29 @@ public class LoginPage extends AppCompatActivity {
             }
         }
 
-        ArrayList<Integer> privatePackets = KeyExchange.generatePrivatePackets(PRIVATE_KEY);
-        ArrayList<String> publicPackets = KeyExchange.generatePublicPackets(privatePackets);
+        ArrayList<String> publicPackets = KeyExchange.generatePublicPackets(PRIVATE_KEY_PACKETS);
         publicKey = KeyExchange.generatePublicKey(publicPackets);
-        System.out.println(publicKey);
-        System.out.println(getFilesDir());
         return publicKey;
+    }
+
+    private void savePrivateKey(String privateKey) {
+        String FILENAME = ".metadata.bin";
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = openFileOutput(FILENAME, MODE_PRIVATE);
+            fileOutputStream.write(privateKey.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void loginUser() {
@@ -139,7 +233,7 @@ public class LoginPage extends AppCompatActivity {
                         return;
                     }
                     if(user.isEmailVerified()) {
-                        final String publicKey = getPublicKey();
+                        publicKey = getPublicKey();
                         FirebaseDatabase.getInstance().getReference("USERS").child(user.getUid())
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -159,10 +253,8 @@ public class LoginPage extends AppCompatActivity {
                                             LoginPage.this.finish();
                                         }
                                         else {
-                                            //todo
-                                            //get custom box private key input
+                                            dialog.show();
                                             loading.setVisibility(View.INVISIBLE);
-                                            Toast.makeText(LoginPage.this, "Authentication Key Error", Toast.LENGTH_LONG).show();
                                         }
                                     }
 

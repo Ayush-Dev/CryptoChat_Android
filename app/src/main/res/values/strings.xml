@@ -34,4 +34,9 @@
     <string name="i_wrote_it_down">I wrote it down</string>
     <string name="encryption">Encryption</string>
     <string name="total_messages">Total Messages</string>
+    <string name="key_input">Looks like you are accessing a new account on this device.\nPlease enter the secret key below</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="key">Key</string>
+    <string name="pin">pin</string>
 </resources>

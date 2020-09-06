@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.ayush.cryptochatv2.adapters.AdapterUser;
 import com.ayush.cryptochatv2.pojo.Users;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +32,7 @@ public class ChatFragment extends Fragment {
     private List<Users> contactList;
     private RecyclerView recyclerView;
     private ShimmerFrameLayout loading;
-    private String CURRENT_UID;
+    private String CURRENT_UID = LoginPage.UID;
     private TextView warning;
     private View view;
 
@@ -44,7 +42,7 @@ public class ChatFragment extends Fragment {
         initialize();
         getContacts();
 //        contactList.add(new Users("Ayush", "email", "uid", ""));
-//        adapterUser = new AdapterUser(getActivity(), contactList, CURRENT_UID);
+//        adapterUser = new AdapterUser(getActivity(), contactList);
 //        recyclerView.setAdapter(adapterUser);
 
         return view;
@@ -60,16 +58,13 @@ public class ChatFragment extends Fragment {
     }
 
     private void getContacts() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null) return;
-        CURRENT_UID = user.getUid();
-        DatabaseReference refContacts = database.getReference("CONTACTS").child(user.getUid());
+        DatabaseReference refContacts = database.getReference("CONTACTS").child(CURRENT_UID);
         refContacts.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 contactList.clear();
                 if(snapshot.getChildrenCount() == 1) {
-                    adapterUser = new AdapterUser(getActivity(), contactList, CURRENT_UID);
+                    adapterUser = new AdapterUser(getActivity(), contactList);
                     recyclerView.setAdapter(adapterUser);
                     loading.setVisibility(View.GONE);
                     warning.setVisibility(View.VISIBLE);
@@ -84,7 +79,7 @@ public class ChatFragment extends Fragment {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         Users users = snapshot.getValue(Users.class);
                                         contactList.add(users);
-                                        adapterUser = new AdapterUser(getActivity(), contactList, CURRENT_UID);
+                                        adapterUser = new AdapterUser(getActivity(), contactList);
                                         recyclerView.setAdapter(adapterUser);
                                         loading.setVisibility(View.GONE);
                                         warning.setVisibility(View.INVISIBLE);

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ayush.cryptochatv2.LoginPage;
 import com.ayush.cryptochatv2.R;
 import com.ayush.cryptochatv2.pojo.Messages;
 

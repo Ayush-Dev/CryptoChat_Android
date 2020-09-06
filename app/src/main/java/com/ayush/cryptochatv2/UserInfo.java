@@ -35,7 +35,7 @@ public class UserInfo extends AppCompatActivity {
         email = findViewById(R.id.userInfoEmail);
         messageCount = findViewById(R.id.userInfoMessageCount);
         toolbar = findViewById(R.id.toolbar);
-        CURRENT_UID = getIntent().getStringExtra("currentUserId");
+        CURRENT_UID = LoginPage.UID;
         USER_NAME = getIntent().getStringExtra("userName");
         USER_EMAIL = getIntent().getStringExtra("userEmail");
         USER_ID = getIntent().getStringExtra("userId");
